@@ -1,0 +1,39 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+public class SubscriptionTest {
+    WebDriver driver;
+
+    @BeforeTest
+    public void setup() {
+        System.setProperty("webdriver.chrome.driver", "path_to_chromedriver");
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://subscribe.stctv.com/sa-en");
+    }
+
+    @Test
+    public void validateSubscriptionPackages() {
+        // Validate for Saudi Arabia (you can expand for Kuwait and Bahrain similarly)
+        WebElement saPackage = driver.findElement(By.xpath("//span[contains(text(),'Saudi Arabia')]"));
+        WebElement priceElement = driver.findElement(By.xpath("//span[@class='price']")); // Adjust this locator
+        WebElement currencyElement = driver.findElement(By.xpath("//span[@class='currency']")); // Adjust this locator
+
+        String expectedPrice = "99.00"; // Use the correct expected price
+        String expectedCurrency = "SAR";
+
+        Assert.assertEquals(priceElement.getText(), expectedPrice, "Price mismatch");
+        Assert.assertEquals(currencyElement.getText(), expectedCurrency, "Currency mismatch");
+    }
+
+    @AfterTest
+    public void teardown() {
+        driver.quit();
+    }
+}
